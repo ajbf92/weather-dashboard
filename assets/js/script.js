@@ -1,12 +1,19 @@
-var runSearch = function () {
-    console.log("it works");
-    var locationRequested = document.getElementById("search-bar").value
-    console.log(locationRequested);
-    getUserRepos(locationRequested);
-}
+var searchHistoryList = document.querySelector("ul");
 
-var getUserRepos = function (){
-    fetch(https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key})
-}
+var runSearch = function () {
+    var locationRequested = document.getElementById("search-bar").value;
+    var requestUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + locationRequested + "&appid=01cf9d1edee20eca447b27b51d4fdc55";
+    
+    fetch(requestUrl)
+        .then(function(response) {
+            return response.json();
+        })
+        console.log(requestUrl);
+
+    // create a search history under the search bar 
+    var listItemCity = document.createElement('h4');
+    listItemCity.textContent = locationRequested;
+    searchHistoryList.appendChild(listItemCity);
+    }
 
 $("#search-button").on("click", runSearch);
