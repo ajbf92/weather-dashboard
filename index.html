@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <title>Weather Dashboard</title>
+</head>
+
+<body>
+    <header Class = "banner col-12">
+        <h1>Weather Dashboard</h1>
+    </header> 
+    <div class="container">
+        <div class="row">
+            <aside Class = "search col-4" id = "side-bar">
+                <h2>Search for a City:</h2>
+                <input type = "search" id = "search-bar" placeholder="Enter a City" size = "auto">
+                <button type = "submit" id = "search-button">Search</button>
+                <div class = "search-history"></div>
+            </aside>
+            <main class = "main col-8">
+                <div class = "current-day">
+                    <h2>Current Day Forecast</h2>
+                    <div class = "info"></div>
+                </div>
+                <div class = "5-day-forecast">
+                    <h2>Next 5-Day Forecast</h2>
+                </div>
+            </main>
+        </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="./assets/js/script.js"></script>    
+</body>
+</html>
