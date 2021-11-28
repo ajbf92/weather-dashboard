@@ -21,14 +21,20 @@
 }
 .search {
     margin-top: 10px;
+    border-right: 5px solid black;
 }
 .current-day {
-    margin: 10px 0px 50px 0px;
+    margin: 10px 0px 300px 0px;
     padding: 0;
 }
 .current-day h2 {
     margin: 0;
 }
 .info {
-
+    Border: 1px solid black;
+}
+.searchHistoryButtons {
+    margin-top:10px;
+    display:flex;
+    flex-direction: column;
 }
