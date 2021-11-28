@@ -28,7 +28,6 @@ var runSearch = function () {
         })
     })
 };
-
 // functions within runSearch
 // gets the current day url
 var requestUrlCurrent = function (locationRequested) {
@@ -233,5 +232,7 @@ var clearInfo = function () {
   selectedAreaDay.textContent = "";
   selectedAreaForecast.textContent = "";
 };
+
+// event listeners
 $(".search-history").on("click", runSearchHistoryItem);
 $("#search-button").on("click", runSearch);
