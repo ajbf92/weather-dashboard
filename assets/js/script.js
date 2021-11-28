@@ -1,17 +1,18 @@
 var currentDay = document.getElementsByClassName("current-day");
+var fiveDayForecast = document.getElementsByClassName("5-day-forecast");
 var searchHistoryList = document.querySelector("ul");
 let searchHistoryArr = [];
 
 var runSearch = function () {
   var locationRequested = document.getElementById("search-bar").value;
   createNAddButton(locationRequested);
-  createEl(currentDay);
+  infoDivEl(currentDay);
   fetch(requestUrlCurrent(locationRequested))
     .then(function (response) {
       return response.json();
     })
     .then(function (data) {
-      CurrentStats(data);
+      currentStats(data);
       var lon = data.coord.lon;
       var lat = data.coord.lat;
       fetch (requestUrl5Days(lat, lon))
@@ -20,12 +21,18 @@ var runSearch = function () {
         })
         .then(function (data) {
           UVI(data);
+          forecastDivEl(fiveDayForecast);
+          forecastAhead(data);
         })
+
+        console.log(requestUrl5Days(lat, lon));
     })
 clearInfo();
 };
 
 // functions within runSearch
+
+// gets the current day url
 var requestUrlCurrent = function (locationRequested) {
   var requestUrlCurrent =
     "https://api.openweathermap.org/data/2.5/weather?q=" +
@@ -33,6 +40,8 @@ var requestUrlCurrent = function (locationRequested) {
     "&units=imperial&appid=01cf9d1edee20eca447b27b51d4fdc55";
   return requestUrlCurrent;
 };
+
+// gets the 5 day forecast url
 var requestUrl5Days = function (lat, lon) {
   var requestUrl5Days =
     "https://api.openweathermap.org/data/2.5/onecall?lat=" +
@@ -43,6 +52,18 @@ var requestUrl5Days = function (lat, lon) {
     console.log(requestUrl5Days);
     return requestUrl5Days;
 };
+
+// creates search history button
+var createNAddButton = function (locationRequested) {
+  // create a search history under the search bar
+  var listItemCity = document.createElement("button");
+  listItemCity.id = locationRequested;
+  listItemCity.className = "searchHistoryButtons";
+  listItemCity.textContent = locationRequested;
+  checkButton(listItemCity);
+};
+
+// checks if button exist/if not it adds it
 var checkButton = function (listItemCity) {
   // check if the array is empty; if so add button and update array
   if (searchHistoryArr.length === 0) {
@@ -65,23 +86,22 @@ var checkButton = function (listItemCity) {
   }
   document.getElementById("search-bar").value = "";
 };
-var createNAddButton = function (locationRequested) {
-  // create a search history under the search bar
-  var listItemCity = document.createElement("button");
-  listItemCity.id = locationRequested;
-  listItemCity.className = "searchHistoryButtons";
-  listItemCity.textContent = locationRequested;
-  checkButton(listItemCity);
-};
-var createEl = function(currentDay) {
+
+// creates div for current day
+var infoDivEl = function(currentDay) {
+  var currentDayHeader = document.createElement("h2");
+  currentDayHeader.textContent= "Current Day Forecast";
+  currentDay[0].appendChild(currentDayHeader);
   var infoDivEl = document.createElement("div");
   infoDivEl.className = "info";
   currentDay[0].appendChild(infoDivEl);
-  var ulEl = document.createElement("ul")
+  var ulEl = document.createElement("ul");
   ulEl.id = "current-day-info";
   infoDivEl.appendChild(ulEl);
 };
-var CurrentDate = function () {
+
+// gets the current date
+var currentDate = function () {
   var currentDate = new Date();
   var date =
     " (" +
@@ -93,12 +113,14 @@ var CurrentDate = function () {
     ")";
   return date;
 };
-var CurrentStats = function (data) {
+
+// gets current stats and appends them to current day div
+var currentStats = function (data) {
   var currentDayList = document.getElementById("current-day-info");
   // City Name
   var cityNameLI = document.createElement("h4");
   cityNameLI.className = "city-name";
-  cityNameLI.textContent = data.name + CurrentDate();
+  cityNameLI.textContent = data.name + currentDate();
   currentDayList.appendChild(cityNameLI);
   // Weather Icon
   var img = document.createElement("img");
@@ -118,31 +140,63 @@ var CurrentStats = function (data) {
   currentWindSpeedLI.textContent = "Wind: " + data.wind.speed + " MPH";
   currentDayList.appendChild(currentWindSpeedLI);
 };
-// need to style the UV index with colors 
+
+// gets the UVI to then append to current day div (need to style the UV index with colors) 
 var UVI = function (data) {
   var currentDayList = document.getElementById("current-day-info");
   var uviLI = document.createElement("li");
   uviLI.textContent = "UV Index: " + data.current.uvi;
   currentDayList.appendChild(uviLI);
 }
-var ForecastAhead = function (data) {
-  var forecastedDays = [data[0], data[1], data[2], data[3], data[4]];
+
+// creates div for 5 day forecast
+var forecastDivEl = function (fiveDayForecast) {
+  var forecastHeader = document.createElement("h2");
+  forecastHeader.textContent= "5-Day Forecast";
+  fiveDayForecast[0].appendChild(forecastHeader);
+  var forecastDiv = document.createElement("div")
+  forecastDiv.className = "row info"
+  fiveDayForecast[0].appendChild(forecastDiv)
+}
+
+// loops through array of 5 days and runs forecastStats()
+var forecastAhead = function (data) {
+  var forecastedDays = [[data.daily[1]],[data.daily[2]],[data.daily[3]],[data.daily[4]],[data.daily[5]]];
   for (i=0; i<forecastedDays.length; i++) {
-    forecastStats([i]);
-    
+  // var boxEl = document.createElement("div")
+  // boxEl.className = "col-2"
+  // boxEl.id = "day-"+[i];
+  // console.log(boxEl.id);
+  // fiveDayForecast[0].appendChild(boxEl);
+  // var ulEl = document.createElement("ul");
+  // boxEl.appendChild(ulEl);
+  forecastStats([i]); 
   }
 };
-var forecastStats = function () {
-  var createBoxEl = document.createElement("div")
+
+//gets 5 day forecast and appends them
+var forecastStats = function ([i]) {
+  var forecastDiv = document.getElementsByClassName("row info");
+  var boxEl = document.createElement("div")
+  boxEl.className = "col-2"
+  boxEl.id = "day-"+[i];
+  console.log(boxEl.id);
+  forecastDiv[0].appendChild(boxEl);
+  var ulEl = document.createElement("ul");
+  boxEl.appendChild(ulEl);
 
 
 // date icon temperature wind speed and humidity
-}
+};
+
+// runs any button clicked on the side menu 
 var runSearchHistoryItem = function (event) {
   var locationRequested = event.target.id;
   document.getElementById("search-bar").value = locationRequested;
   runSearch(locationRequested);
 };
+
+// clears the search bar after searching
 var clearInfo = function () {
   var selectedArea = document.getElementById("current-day-info");
   selectedArea.textContent = "";
