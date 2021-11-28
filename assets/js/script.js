@@ -1,11 +1,11 @@
+var currentDay = document.getElementsByClassName("current-day");
 var searchHistoryList = document.querySelector("ul");
-var currentDayList = document.getElementById("current-day-info");
 let searchHistoryArr = [];
 
 var runSearch = function () {
   var locationRequested = document.getElementById("search-bar").value;
   createNAddButton(locationRequested);
-  clearInfo();
+  createEl(currentDay);
   fetch(requestUrlCurrent(locationRequested))
     .then(function (response) {
       return response.json();
@@ -22,6 +22,7 @@ var runSearch = function () {
           UVI(data);
         })
     })
+clearInfo();
 };
 
 // functions within runSearch
@@ -72,43 +73,71 @@ var createNAddButton = function (locationRequested) {
   listItemCity.textContent = locationRequested;
   checkButton(listItemCity);
 };
+var createEl = function(currentDay) {
+  var infoDivEl = document.createElement("div");
+  infoDivEl.className = "info";
+  currentDay[0].appendChild(infoDivEl);
+  var ulEl = document.createElement("ul")
+  ulEl.id = "current-day-info";
+  infoDivEl.appendChild(ulEl);
+};
 var CurrentDate = function () {
   var currentDate = new Date();
   var date =
     " (" +
-    currentDate.getDay() +
+    (currentDate.getMonth() +1) +
     "/" +
-    (currentDate.getMonth() + 1) +
+    currentDate.getDate() +
     "/" +
     currentDate.getFullYear() +
     ")";
   return date;
 };
 var CurrentStats = function (data) {
+  var currentDayList = document.getElementById("current-day-info");
+  // City Name
   var cityNameLI = document.createElement("h4");
   cityNameLI.className = "city-name";
   cityNameLI.textContent = data.name + CurrentDate();
   currentDayList.appendChild(cityNameLI);
+  // Weather Icon
   var img = document.createElement("img");
   img.src =
     "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png";
   currentDayList.appendChild(img);
+  // Temperature
   var currentTemperatureLI = document.createElement("li");
   currentTemperatureLI.textContent = "Temp: " + data.main.temp + "F";
   currentDayList.appendChild(currentTemperatureLI);
+  // Humidity
   var currentHumidityLI = document.createElement("li");
   currentHumidityLI.textContent = "Humidity: " + data.main.humidity + "%";
   currentDayList.appendChild(currentHumidityLI);
+  // Wind Speed
   var currentWindSpeedLI = document.createElement("li");
   currentWindSpeedLI.textContent = "Wind: " + data.wind.speed + " MPH";
   currentDayList.appendChild(currentWindSpeedLI);
 };
+// need to style the UV index with colors 
 var UVI = function (data) {
+  var currentDayList = document.getElementById("current-day-info");
   var uviLI = document.createElement("li");
   uviLI.textContent = "UV Index: " + data.current.uvi;
   currentDayList.appendChild(uviLI);
 }
-// var ForecastAhead = function (data) {};
+var ForecastAhead = function (data) {
+  var forecastedDays = [data[0], data[1], data[2], data[3], data[4]];
+  for (i=0; i<forecastedDays.length; i++) {
+    forecastStats([i]);
+    
+  }
+};
+var forecastStats = function () {
+  var createBoxEl = document.createElement("div")
+
+
+// date icon temperature wind speed and humidity
+}
 var runSearchHistoryItem = function (event) {
   var locationRequested = event.target.id;
   document.getElementById("search-bar").value = locationRequested;
