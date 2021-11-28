@@ -4,6 +4,7 @@ var searchHistoryList = document.querySelector("ul");
 let searchHistoryArr = [];
 
 var runSearch = function () {
+  clearInfo();
   var locationRequested = document.getElementById("search-bar").value;
   createNAddButton(locationRequested);
   infoDivEl(currentDay);
@@ -27,7 +28,6 @@ var runSearch = function () {
 
         console.log(requestUrl5Days(lat, lon));
     })
-clearInfo();
 };
 
 // functions within runSearch
@@ -126,10 +126,11 @@ var currentStats = function (data) {
   var img = document.createElement("img");
   img.src =
     "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png";
+    console.log(img);
   currentDayList.appendChild(img);
   // Temperature
   var currentTemperatureLI = document.createElement("li");
-  currentTemperatureLI.textContent = "Temp: " + data.main.temp + "F";
+  currentTemperatureLI.textContent = "Temp: " + data.main.temp + " F";
   currentDayList.appendChild(currentTemperatureLI);
   // Humidity
   var currentHumidityLI = document.createElement("li");
@@ -141,12 +142,26 @@ var currentStats = function (data) {
   currentDayList.appendChild(currentWindSpeedLI);
 };
 
-// gets the UVI to then append to current day div (need to style the UV index with colors) 
+// gets the UVI to then append to current day div 
 var UVI = function (data) {
   var currentDayList = document.getElementById("current-day-info");
   var uviLI = document.createElement("li");
   uviLI.textContent = "UV Index: " + data.current.uvi;
-  currentDayList.appendChild(uviLI);
+  var colorIndex = function (){
+  if (data.current.uvi < 3) {
+    uviLI.className = "green";
+  } else if (data.current.uvi < 6) {
+    uviLI.className = "yellow";
+  } else if (data.current.uvi < 9) {
+    uviLI.className = "orange";
+  } else if (data.current.uvi < 11) {
+    uviLI.className = "red";
+  } else if (data.current.uvi >= 11) {
+    uviLI.className = "violet";
+  }
+}
+colorIndex();
+currentDayList.appendChild(uviLI);
 }
 
 // creates div for 5 day forecast
@@ -163,32 +178,53 @@ var forecastDivEl = function (fiveDayForecast) {
 var forecastAhead = function (data) {
   var forecastedDays = [[data.daily[1]],[data.daily[2]],[data.daily[3]],[data.daily[4]],[data.daily[5]]];
   for (i=0; i<forecastedDays.length; i++) {
-  // var boxEl = document.createElement("div")
-  // boxEl.className = "col-2"
-  // boxEl.id = "day-"+[i];
-  // console.log(boxEl.id);
-  // fiveDayForecast[0].appendChild(boxEl);
-  // var ulEl = document.createElement("ul");
-  // boxEl.appendChild(ulEl);
-  forecastStats([i]); 
+  forecastDayDivs([i]); 
+  forecastStats(forecastedDays, [i]);
   }
 };
 
-//gets 5 day forecast and appends them
-var forecastStats = function ([i]) {
+// creates divs for the next 5 days
+var forecastDayDivs = function ([i]) {
   var forecastDiv = document.getElementsByClassName("row info");
   var boxEl = document.createElement("div")
-  boxEl.className = "col-2"
+  boxEl.className = "forecastBoxEl col-4 info"
   boxEl.id = "day-"+[i];
-  console.log(boxEl.id);
   forecastDiv[0].appendChild(boxEl);
   var ulEl = document.createElement("ul");
+  ulEl.className = "forecast-ul day-" +[i];
   boxEl.appendChild(ulEl);
+};
+
+//gets 5 day forecast and appends them to each div
+var forecastStats = function (forecastedDays, [i]) {
+  console.log(forecastedDays);
+var forecastUl = document.getElementsByClassName("day-" + [i]);
+
+// Weather Icon
+var forecastimg = document.createElement("img");
+forecastimg.src =
+  "http://openweathermap.org/img/wn/" + forecastedDays[i][0].weather[0].icon + "@2x.png";
+console.log(forecastimg);
+forecastUl[0].appendChild(forecastimg);
+
+// Temperature
+var forecastTempLi = document.createElement("li");
+forecastTempLi.textContent = "Temp: " + forecastedDays[i][0].temp.day + " F";
+forecastUl[0].appendChild(forecastTempLi);
+
+// Humidity
+var forecastHumidityLi = document.createElement("li");
+forecastHumidityLi.textContent = "Humidity: " + forecastedDays[i][0].humidity + "%";
+forecastUl[0].appendChild(forecastHumidityLi);
+
+// Wind Speed
+var forecastWindSpeedLi = document.createElement("li");
+forecastWindSpeedLi.textContent = "Wind: " + forecastedDays[i][0].wind_speed + " MPH";
+forecastUl[0].appendChild(forecastWindSpeedLi);
 
 
 // date icon temperature wind speed and humidity
 };
-
 // runs any button clicked on the side menu 
 var runSearchHistoryItem = function (event) {
   var locationRequested = event.target.id;
@@ -196,10 +232,12 @@ var runSearchHistoryItem = function (event) {
   runSearch(locationRequested);
 };
 
-// clears the search bar after searching
+// clears the search bar after searching and deletes information for prior search
 var clearInfo = function () {
-  var selectedArea = document.getElementById("current-day-info");
-  selectedArea.textContent = "";
+  var selectedAreaDay = document.getElementById("current");
+  var selectedAreaForecast = document.getElementById("forecast")
+  selectedAreaDay.textContent = "";
+  selectedAreaForecast.textContent = "";
 };
 $(".search-history").on("click", runSearchHistoryItem);
 $("#search-button").on("click", runSearch);

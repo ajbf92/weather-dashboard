@@ -23,6 +23,9 @@
     margin-top: 10px;
     border-right: 5px solid black;
 }
+.main {
+   padding-left: 60px; 
+}
 .current-day {
     margin: 10px 0px 20px 0px;
     padding: 0;
@@ -37,4 +40,30 @@
     margin-top:10px;
     display:flex;
     flex-direction: column;
+}
+.forecastBoxEl{
+    border: 1px solid black;
+    padding: 5px;
+    background-color: royalblue;
+    color: white
+}
+.forecast-ul {
+    padding: 0px;
+    list-style-type: none;
+    font-size: auto;
+}
+.green {
+    color: green;
+}
+.yellow {
+    color: yellow;
+}
+.orange {
+    color: orange;
+}
+.red {
+    color: red;
+}
+.violet {
+    color: violet;
 }
