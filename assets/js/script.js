@@ -3,6 +3,7 @@ var fiveDayForecast = document.getElementsByClassName("5-day-forecast");
 var searchHistoryList = document.querySelector("ul");
 let searchHistoryArr = [];
 
+// runs search on desired city
 var runSearch = function () {
   clearInfo();
   var locationRequested = document.getElementById("search-bar").value;
@@ -25,13 +26,10 @@ var runSearch = function () {
           forecastDivEl(fiveDayForecast);
           forecastAhead(data);
         })
-
-        console.log(requestUrl5Days(lat, lon));
     })
 };
 
 // functions within runSearch
-
 // gets the current day url
 var requestUrlCurrent = function (locationRequested) {
   var requestUrlCurrent =
@@ -197,7 +195,6 @@ var forecastDayDivs = function ([i]) {
 
 //gets 5 day forecast and appends them to each div
 var forecastStats = function (forecastedDays, [i]) {
-  console.log(forecastedDays);
 var forecastUl = document.getElementsByClassName("day-" + [i]);
 
 // Weather Icon
@@ -221,9 +218,6 @@ forecastUl[0].appendChild(forecastHumidityLi);
 var forecastWindSpeedLi = document.createElement("li");
 forecastWindSpeedLi.textContent = "Wind: " + forecastedDays[i][0].wind_speed + " MPH";
 forecastUl[0].appendChild(forecastWindSpeedLi);
-
-
-// date icon temperature wind speed and humidity
 };
 // runs any button clicked on the side menu 
 var runSearchHistoryItem = function (event) {
